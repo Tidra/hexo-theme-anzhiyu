@@ -1,16 +1,12 @@
 if site.data.about
   - let aboutData = site.data.about
   each item in aboutData
+    - let pageName = item.class_name || '关于我'
     - let subtitle = item.subtitle || config.subtitle
     - let avatarImg = item.avatarImg || theme.avatar.img
-    - let aboutName = item.name || theme.author
-    - let aboutDescription = item.description || config.description
-    - let helloAbout = item.helloAbout
-    - let skillsTips = item.skillsTips
-    - let careers = item.careers
-    - let crrList = careers.list
-    - let crrItem = careers.item
     - let avatarSkills = item.avatarSkills
+    - let comicImgLen = 1
+    - let countUpYear = 0
     #about-page
       .author-box
         if avatarSkills
@@ -23,92 +19,139 @@ if site.data.about
           .author-tag-right
             each item in avatarSkills.right
               span.author-tag=item
-      p.p.center.logo.large 关于我
+      p.p.center.logo.large=pageName
       p.p.center.small=subtitle
-      .author-content
-        .author-content-item.myInfoAndSayHello
-          .title1 你好，很高兴认识你👋
-          .title2
-            | 我叫 
-            span.inline-word=aboutName
-          .title1=aboutDescription
-        .aboutsiteTips.author-content-item
-          - let { tips, title1, title2, word } = item.aboutsiteTips
-          .author-content-item-tips= tips
-          h2
-            = title1
-            br
-            = title2
-            .mask
-              each wordItem, index in word
-                if index < word.length - 2
-                  span(class=(index === 0 ? 'first-tips' : ''))= wordItem
-              span(data-up)= word[word.length - 2]
-              |  
-              span(data-show)= word[word.length - 1]
-      
-      .hello-about
-        .cursor(style='translate:none;rotate:none;scale:none;transform:translate(721px,180px)')
-        .shapes
-          .shape.shape-1(style='translate:none;rotate:none;scale:none;transform:translate(721px,180px)')
-          .shape.shape-2(style='translate:none;rotate:none;scale:none;transform:translate(721px,180px)')
-          .shape.shape-3(style='translate:none;rotate:none;scale:none;transform:translate(721px,180px)')
-        .content
-          h1=helloAbout
       
       .author-content
-        .author-content-item.skills
-          .card-content
-            .author-content-item-tips=skillsTips.tips
-            span.author-content-item-title=skillsTips.title
-            .skills-style-group
-              include ../anzhiyu/tags-group-all.pug
-              if site.data.creativity
-                .skills-list
-                  each i in site.data.creativity
-                    each item, index in i.creativity_list
-                      .skill-info
-                        .skill-icon(style=`background: ${item.color}`)
-                          img.no-lightbox(title=item.name, src=item.icon, alt=item.name)
-                        .skill-name
-                          span=item.name 
-                  .etc ...
-        .author-content-item.careers
-          .card-content
-            .author-content-item-tips=careers.tips
-            span.author-content-item-title=careers.title
-            .careers-group
-              if crrList
-                each career in crrList
-                  .career-item
-                    .circle(style=`background:${career.color ? career.color : "#357ef5"}`)
-                    .name=career.desc
-              else
-                .careers-none
+        mixin addAbout(about, isGroup)
+          - let flexStyle = ''
+          if isGroup
+            - flexStyle = 'flex: none;'
+          else
+            - flexStyle = 'flex-basis: ' + (about.flexBasis ? about.flexBasis : 60) * 0.9+ '%;'
+          .author-content-item.myInfoAndSayHello(style=`${flexStyle}`)
+            .title1=about.welcome || '你好，很高兴认识你👋'
+            .title2=about.name || theme.author
+            .title1=about.description || config.description
+      
+        mixin addAboutsiteTips(aboutsiteTips, isGroup)
+          - let flexStyle = ''
+          if isGroup
+            - flexStyle = 'flex: none;'
+          else
+            - flexStyle = 'flex-basis: ' + (aboutsiteTips.flexBasis ? aboutsiteTips.flexBasis : 40) * 0.9+ '%;'
+          .author-content-item.aboutsiteTips(style=`${flexStyle}`)
+            - let { tips, title1, title2, word } = aboutsiteTips
+            .author-content-item-tips= tips
+            h2
+              = title1
+              br
+              = title2
+              .mask
+                each wordItem, index in word
+                  if index < word.length - 2
+                    span(class=(index === 0 ? 'first-tips' : ''))= wordItem
+                span(data-up)= word[word.length - 2]
+                |  
+                span(data-show)= word[word.length - 1]
+
+        mixin addHelloAbout(helloAbout)
+          .hello-about(style='flex-basis: 100%;')
+            .cursor(style='translate:none;rotate:none;scale:none;transform:translate(721px,180px)')
+            .shapes
+              .shape.shape-1(style='translate:none;rotate:none;scale:none;transform:translate(721px,180px)')
+              .shape.shape-2(style='translate:none;rotate:none;scale:none;transform:translate(721px,180px)')
+              .shape.shape-3(style='translate:none;rotate:none;scale:none;transform:translate(721px,180px)')
+            .content
+              h1=helloAbout.text
+
+        mixin addSkillsTips(skillsTips, isGroup)
+          - let flexStyle = ''
+          if isGroup
+            - flexStyle = 'flex: none;'
+          else
+            - flexStyle = 'flex-basis: ' + (skillsTips.flexBasis ? skillsTips.flexBasis : 50) * 0.9+ '%;'
+          .author-content-item.skills(style=`${flexStyle}`)
+            .card-content
+              .author-content-item-tips=skillsTips.tips
+              span.author-content-item-title=skillsTips.title
+              .skills-style-group
+                include ../anzhiyu/tags-group-all.pug
+                if site.data.creativity
+                  .skills-list
+                    each i in site.data.creativity
+                      each item, index in i.creativity_list
+                        .skill-info
+                          .skill-icon(style=`background: ${item.color}`)
+                            img.no-lightbox(title=item.name, src=item.icon, alt=item.name)
+                          .skill-name
+                            span=item.name 
+                    .etc ...
+
+        mixin addCareers(careers, isGroup)
+          - let flexStyle = ''
+          if isGroup
+            - flexStyle = 'flex: none;'
+          else
+            - flexStyle = 'flex-basis: ' + (careers.flexBasis ? careers.flexBasis : 50) * 0.9+ '%;'
+          - let crrList = careers.list
+          - let crrItem = careers.item
+          .author-content-item.careers(style=`${flexStyle}`)
+            .card-content
+              .author-content-item-tips=careers.tips
+              span.author-content-item-title=careers.title
+              .careers-group
+                if crrList
+                  each career in crrList
+                    .career-item
+                      .circle(style=`background:${career.color ? career.color : "#357ef5"}`)
+                      .name=career.desc
+                else
+                  .careers-none
             if careers.img
               img.author-content-img.no-lightbox(alt=careers.tips, src=url_for(careers.img) onerror=`this.onerror=null;this.src='` + url_for(theme.error_img.flink) + `'`)
-      
-      .author-content
-        if theme.LA.enable
-          - let cover = item.statistic.cover
-          .about-statistic.author-content-item(style=`background: url(${cover}) top / cover no-repeat;`)
+
+        mixin addStatistic(statistic, isGroup)
+          - let flexStyle = ''
+          if isGroup
+            - flexStyle = 'flex: none;'
+          else
+            - flexStyle = 'flex-basis: ' + (statistic.flexBasis ? statistic.flexBasis : 50) * 0.9+ '%;'
+          - let cover = statistic.cover
+          .author-content-item.about-statistic(style=`background: url(${cover}) top / cover no-repeat;${flexStyle}`)
             .card-content
               .author-content-item-tips 数据
               span.author-content-item-title 访问统计
               #statistic
+                if !theme.LA.enable
+                  div
+                    span 总访问量
+                    span#busuanzi_value_site_pv
+                  div 总访客数
+                    span
+                    span#busuanzi_value_site_uv
               .post-tips
                 | 统计信息来自 
-                a(href='https://invite.51.la/1NzKqTeb?target=V6', target='_blank', rel='noopener nofollow') 51la网站统计
+                if theme.LA.enable
+                  a(href='https://invite.51.la/1NzKqTeb?target=V6', target='_blank', rel='noopener nofollow') 51la网站统计
+                else
+                  a(href='/', target='_blank', rel='noopener nofollow') busuanzi
               .banner-button-group
-                - let link = item.statistic.link
-                - let text = item.statistic.text
+                - let link = statistic.link
+                - let text = statistic.text
                 a.banner-button(onclick=`pjax.loadUrl("${link}")`)
                   i.anzhiyufont.anzhiyu-icon-arrow-circle-right
                   |  
                   span.banner-button-text=text
-        .author-content-item-group.column.mapAndInfo
-          - let mapBackground = item.map.background
-          - let mapBackgroundDark = item.map.backgroundDark
+
+        mixin addMap(map, isGroup)
+          - let flexStyle = ''
+          if isGroup
+            - flexStyle = 'flex: none;'
+          else
+            - flexStyle = 'flex-basis: ' + (map.flexBasis ? map.flexBasis : 50) * 0.9+ '%;'
+          - let mapBackground = map.background
+          - let mapBackgroundDark = map.backgroundDark
           style.
             .author-content-item.map {
               background-image: url(#{mapBackground});
@@ -116,13 +159,21 @@ if site.data.about
             [data-theme='dark'] .author-content-item.map {
               background-image: url(#{mapBackgroundDark});
             }
-          .author-content-item.map.single
-            - let mapTitle = item.map.title
-            - let mapStrengthenTitle = item.map.StrengthenTitle
+          .author-content-item.map(style=`${flexStyle}`)
+            - let mapTitle = map.title
+            - let mapStrengthenTitle = map.StrengthenTitle
             span.map-title=mapTitle
               b=mapStrengthenTitle
-          .author-content-item.selfInfo.single
-            - let { selfInfoTips1, selfInfoContentYear, selfInfoTips2, selfInfoContent2, selfInfoTips3, selfInfoContent3 } = item.selfInfo
+
+        mixin addSelfInfo(selfInfo, isGroup)
+          - let flexStyle = ''
+          if isGroup
+            - flexStyle = 'flex: none;'
+          else
+            - flexStyle = 'flex-basis: ' + (selfInfo.flexBasis ? selfInfo.flexBasis : 50) * 0.9+ '%;'
+          .author-content-item.selfInfo(style=`${flexStyle}`)
+            - let { selfInfoTips1, selfInfoContentYear, selfInfoTips2, selfInfoContent2, selfInfoTips3, selfInfoContent3 } = selfInfo
+            - countUpYear = selfInfoContentYear
             div
               span.selfInfo-title=selfInfoTips1
               |  
@@ -136,83 +187,174 @@ if site.data.about
               |  
               span.selfInfo-content(style='color:#b04fe6')=selfInfoContent3
       
-      .author-content
-        .author-content-item.personalities
-          - let {author_name, personality_type, photo_url, personality_img, name_url, personality_type_color} = item.personalities
-          .author-content-item-tips 性格
-          span.author-content-item-title= author_name
-          .title2(style=`color:${personality_type_color ? personality_type_color : "#ac899c"}`)= personality_type
-          .post-tips
-            | 在 
-            a(href='https://www.16personalities.com/', target='_blank', rel='noopener nofollow') 16personalities
-            |  了解更多关于 
-            a(target='_blank', rel='noopener external nofollow', href= name_url)= author_name
-          .image
-            img.no-lightbox(src=url_for(personality_img), alt='人格')
-        .author-content-item.myphoto
-          img.author-content-img.no-lightbox(alt='自拍', src=url_for(photo_url))
+        mixin addPersonalities(personalities, isGroup)
+          - let flexStyle = ''
+          if isGroup
+            - flexStyle = 'flex: none;'
+          else
+            - flexStyle = 'flex-basis: 55%;'
+          .author-content-item.personalities(style=`${flexStyle}`)
+            - let { author_name, personality_type, photo_url, personality_img, name_url, personality_type_color} = personalities
+            .author-content-item-tips 性格
+            span.author-content-item-title= author_name
+            .title2(style=`color:${personality_type_color ? personality_type_color : "#ac899c"}`)= personality_type
+            .post-tips
+              | 在 
+              a(href='https://www.16personalities.com/', target='_blank', rel='noopener nofollow') 16personalities
+              |  了解更多关于 
+              a(target='_blank', rel='noopener external nofollow', href= name_url)= author_name
+            .image
+              img.no-lightbox(src=url_for(personality_img), alt='人格')
+          .author-content-item.myphoto
+            img.author-content-img.no-lightbox(alt='自拍', src=url_for(photo_url))
       
-      .author-content
-        .author-content-item.maxim
-          - let {maxim_tips, maxim_top, maxim_bottom} = item.maxim
-          .author-content-item-tips=maxim_tips
-          span.maxim-title
-            span(style='opacity:.6;margin-bottom:8px')=maxim_top
-            |  
-            span=maxim_bottom
-        .author-content-item.buff
-          .card-content
-          - let {buff_tips, buff_top, buff_bottom} = item.buff
-            .author-content-item-tips=buff_tips
-            span.buff-title
-              span(style='opacity:.6;margin-bottom:8px')=buff_top
+        mixin addMaxim(maxim, isGroup)
+          - let flexStyle = ''
+          if isGroup
+            - flexStyle = 'flex: none;'
+          else
+            - flexStyle = 'flex-basis: ' + (maxim.flexBasis ? maxim.flexBasis : 50) * 0.9+ '%;'
+          .author-content-item.maxim(style=`${flexStyle}`)
+            - let { maxim_tips, maxim_top, maxim_bottom} = maxim
+            .author-content-item-tips=maxim_tips
+            span.maxim-title
+              span(style='opacity:.6;margin-bottom:8px')=maxim_top
               |  
-              span=buff_bottom
-          .card-background-icon
-            i.anzhiyufont.anzhiyu-icon-dice-d20
+              span=maxim_bottom
 
-      .author-content
-        - let {game_tips, game_title, game_uid, game_bg} = item.game
-        .author-content-item.game-yuanshen(style=`background: url(${game_bg}) top / cover no-repeat;`)
-          .card-content
-            .author-content-item-tips=game_tips
-            span.author-content-item-title=game_title
-            .content-bottom
-              .icon-group
-                .loading-bar(role='presentation', aria-hidden='true' style=`${game_title != "原神" ? "display: none": ""}`)
-              .tips.game-yuanshen-uid=game_uid
-        .author-content-item.comic-content
-          .card-content
-            - let {comic_tips, comic_title, comic_list} = item.comic
-            .author-content-item-tips=comic_tips
-            .author-content-item-title=comic_title
+        mixin addBuff(buff, isGroup)
+          - let flexStyle = ''
+          if isGroup
+            - flexStyle = 'flex: none;'
+          else
+            - flexStyle = 'flex-basis: ' + (buff.flexBasis ? buff.flexBasis : 50) * 0.9+ '%;'
+          .author-content-item.buff(style=`${flexStyle}`)
+            .card-content
+              - let {buff_tips, buff_top, buff_bottom} = buff
+              .author-content-item-tips=buff_tips
+              span.buff-title
+                span(style='opacity:.6;margin-bottom:8px')=buff_top
+                |  
+                span=buff_bottom
+            .card-background-icon
+              i.anzhiyufont.anzhiyu-icon-dice-d20
+
+        mixin addGame(game, isGroup)
+          - let flexStyle = ''
+          if isGroup
+            - flexStyle = 'flex: none;'
+          else
+            - flexStyle = 'flex-basis: ' + (game.flexBasis ? game.flexBasis : 50) * 0.9+ '%;'
+          - let {game_tips, game_title, game_uid, game_bg} = game
+          .author-content-item.game-yuanshen(style=`background: url(${game_bg}) top / cover no-repeat;${flexStyle}`)
+            .card-content
+              .author-content-item-tips=game_tips
+              span.author-content-item-title=game_title
+              .content-bottom
+                .icon-group
+                  .loading-bar(role='presentation', aria-hidden='true' style=`${game_title != "原神" ? "display: none": ""}`)
+                .tips.game-yuanshen-uid=game_uid
+
+        mixin addComic(comic, isGroup)
+          - let flexStyle = ''
+          if isGroup
+            - flexStyle = 'flex: none;'
+          else
+            - flexStyle = 'flex-basis: ' + (comic.flexBasis ? comic.flexBasis : 50) * 0.9+ '%;'
+          .author-content-item.comic-content(style=`${flexStyle}`)
+            .card-content(style='pointer-events: none;')
+              - let {comic_tips, comic_title, comic_list} = comic
+              .author-content-item-tips=comic_tips
+              .author-content-item-title=comic_title
             .comic-box
               if comic_list
+                - comicImgLen = comic_list.length
+                style.
+                  .author-content-item.comic-content .comic-item {
+                      width: #{100 / comicImgLen}%;
+                  }
+                  .author-content-item.comic-content .comic-item:hover {
+                    width: #{100 / comicImgLen * 2.6}%;
+                  }
+                  .author-content-item.comic-content .comic-box{
+                      width: min(#{145.5 * comicImgLen}px,100% + 104px);
+                  }
                 each i in comic_list
                   a.comic-item(href=i.href, target="_blank", title=i.name)
                     .comic-item-cover
                       img(src=i.cover, alt=i.name)
-      
-      .author-content
-        - let {music_tips, music_title, music_link, music_bg} = item.music
-        - let {like_tips, like_title, like_bottom, like_bg} = item.like
-        .author-content-item.like-technology(style=`background: url(${like_bg}) top / cover no-repeat;`)
-          .card-content
-            .author-content-item-tips=like_tips
-            span.author-content-item-title=like_title
-            .content-bottom
-              .tips=like_bottom
-        .author-content-item.like-music(style=`background: url(${music_bg}) top / cover no-repeat;`)
-          .card-content
-            .author-content-item-tips=music_tips
-            span.author-content-item-title=music_title
-            .content-bottom
-              .tips=`跟 ${aboutName} 一起欣赏更多音乐`
-            .banner-button-group
-              a.banner-button(onclick=`pjax.loadUrl("${music_link}")`)
-                i.anzhiyufont.anzhiyu-icon-arrow-circle-right
-                |  
-                span.banner-button-text 更多推荐
+
+        mixin addLike(like, isGroup)
+          - let flexStyle = ''
+          if isGroup
+            - flexStyle = 'flex: none;'
+          else
+            - flexStyle = 'flex-basis: ' + (like.flexBasis ? like.flexBasis : 50) * 0.9+ '%;'
+          - let {like_tips, like_title, like_bottom, like_bg} = like
+          .author-content-item.like-technology(style=`background: url(${like_bg}) top / cover no-repeat;${flexStyle}`)
+            .card-content
+              .author-content-item-tips=like_tips
+              span.author-content-item-title=like_title
+              .content-bottom
+                .tips=like_bottom
+
+        mixin addMusic(music, isGroup)
+          - let flexStyle = ''
+          if isGroup
+            - flexStyle = 'flex: none;'
+          else
+            - flexStyle = 'flex-basis: ' + (music.flexBasis ? music.flexBasis : 50) * 0.9+ '%;'
+          - let {music_tips, music_title, music_link, music_bg} = music
+          .author-content-item.like-music(style=`background: url(${music_bg}) top / cover no-repeat;${flexStyle}`)
+            .card-content
+              .author-content-item-tips=music_tips
+              span.author-content-item-title=music_title
+              .content-bottom
+                .tips=`跟 ${aboutName} 一起欣赏更多音乐`
+              .banner-button-group
+                a.banner-button(onclick=`pjax.loadUrl("${music_link}")`)
+                  i.anzhiyufont.anzhiyu-icon-arrow-circle-right
+                  |  
+                  span.banner-button-text 更多推荐
+
+        mixin addGroup(group)
+          - let flexStyle = 'flex-basis: ' + (group.flexBasis ? group.flexBasis : 50) * 0.9+ '%;'
+          .author-content-item-group.column(style=`${flexStyle}`)
+            each it in group.list
+              case it.type
+                when 'about': +addAbout(itc, true)
+                when 'aboutsiteTips': +addAboutsiteTips(itc, true)
+                when 'skillsTips': +addSkillsTips(it, true)
+                when 'careers': +addCareers(it, true)
+                when 'statistic': +addStatistic(it, true)
+                when 'map': +addMap(it, true)
+                when 'selfInfo': +addSelfInfo(it, true)
+                when 'personalities': +addPersonalities(it, true)
+                when 'maxim': +addMaxim(it, true)
+                when 'buff': +addBuff(it, true)
+                when 'game': +addGame(it, true)
+                when 'comic': +addComic(it, true)
+                when 'like': +addLike(it, true)
+                when 'music': +addMusic(it, true)
+        
+        each itc in item.content
+          case itc.type
+            when 'about': +addAbout(itc)
+            when 'aboutsiteTips': +addAboutsiteTips(itc)
+            when 'helloAbout': +addHelloAbout(itc)
+            when 'skillsTips': +addSkillsTips(itc)
+            when 'careers': +addCareers(itc)
+            when 'statistic': +addStatistic(itc)
+            when 'map': +addMap(itc)
+            when 'selfInfo': +addSelfInfo(itc)
+            when 'personalities': +addPersonalities(itc)
+            when 'maxim': +addMaxim(itc)
+            when 'buff': +addBuff(itc)
+            when 'game': +addGame(itc)
+            when 'comic': +addComic(itc)
+            when 'like': +addLike(itc)
+            when 'music': +addMusic(itc)
+            when 'group': +addGroup(itc)
 
       if page.content
         .author-content
@@ -287,106 +429,172 @@ if site.data.about
 
 
     script(src=url_for(theme.asset.countup_js))
-    - const ck = theme.LA.ck
+    if countUpYear
+      script().
+        const selfInfoContentYear = new CountUp("selfInfo-content-year", 0, #{countUpYear}, 0, 2, {
+          useEasing: true,
+          useGrouping: false,
+          separator: ",",
+          decimal: ".",
+          prefix: "",
+          suffix: "",
+        });
+
+        let selfInfoContentYearElement = document.querySelector(".author-content-item.selfInfo");
+        function selfInfoContentYearUp() {
+          if (!selfInfoContentYearElement) return;
+
+          const callback = (entries, observer) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                selfInfoContentYear.start();
+                observer.disconnect(); // 停止观察元素，因为不再需要触发此回调
+              }
+            });
+          };
+
+          const options = {
+            root: null,
+            rootMargin: "0px",
+            threshold: 0
+          };
+          const observer = new IntersectionObserver(callback, options);
+          observer.observe(selfInfoContentYearElement);
+        }
+    if theme.LA.enable
+      - const ck = theme.LA.ck
+      script().
+        function initStatistic() {
+          fetch("https://v6-widget.51.la/v6/#{ck}/quote.js")
+            .then(res => res.text())
+            .then(data => {
+              let title = ["最近活跃", "今日人数", "今日访问", "昨日人数", "昨日访问", "本月访问", "总访问量"];
+              let num = data.match(/(<\/span><span>).*?(\/span><\/p>)/g);
+
+              num = num.map(el => {
+                let val = el.replace(/(<\/span><span>)/g, "");
+                let str = val.replace(/(<\/span><\/p>)/g, "");
+                return str;
+              });
+
+              let statisticEl = document.getElementById("statistic");
+
+              // 自定义不显示哪个或者显示哪个，如下为不显示 最近活跃访客 和 总访问量
+              let statistic = [];
+              for (let i = 0; i < num.length; i++) {
+                if (!statisticEl) return;
+                if (i == 0) continue;
+                statisticEl.innerHTML +=
+                  "<div><span>" + title[i] + "</span><span id=" + title[i] + ">" + num[i] + "</span></div>";
+                queueMicrotask(() => {
+                  statistic.push(
+                    new CountUp(title[i], 0, num[i], 0, 2, {
+                      useEasing: true,
+                      useGrouping: true,
+                      separator: ",",
+                      decimal: ".",
+                      prefix: "",
+                      suffix: "",
+                    })
+                  );
+                });
+              }
+
+              let statisticElement = document.querySelector(".about-statistic.author-content-item");
+              function statisticUP() {
+                if (!statisticElement) return;
+
+                const callback = (entries, observer) => {
+                  entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                      for (let i = 0; i < num.length; i++) {
+                        if (i == 0) continue;
+                        queueMicrotask(() => {
+                          statistic[i - 1].start();
+                        });
+                      }
+                      observer.disconnect(); // 停止观察元素，因为不再需要触发此回调
+                    }
+                  });
+                };
+
+                const options = {
+                  root: null,
+                  rootMargin: "0px",
+                  threshold: 0
+                };
+                const observer = new IntersectionObserver(callback, options);
+                observer.observe(statisticElement);
+              }
+
+              statisticUP()
+            });          
+        }
+    else if theme.busuanzi.site_uv && theme.busuanzi.site_pv
+      script(defer). 
+        function initStatistic() {
+          let statisticElement = document.querySelector(".about-statistic.author-content-item");
+          function statisticUP() {
+            if (!statisticElement) return;
+
+            let countUpInstances = [];
+
+            // 获取busuanzi_value_site_pv和busuanzi_value_site_uv的实际数值（如果存在）
+            const sitePVElement = document.getElementById("busuanzi_value_site_pv");
+            if (sitePVElement) {
+              let trimmedText = sitePVElement.textContent.trim();
+              if (!trimmedText) return;
+              const sitePVValue = trimmedText ? parseInt(trimmedText, 10) : 0;
+              countUpInstances.push(new CountUp("busuanzi_value_site_pv", 0, sitePVValue, 0, 2, {
+                useEasing: true,
+                useGrouping: false,
+                separator: ",",
+                decimal: ".",
+                prefix: "",
+                suffix: "",
+              }));
+            }
+
+            const siteUVElement = document.getElementById("busuanzi_value_site_uv");
+            if (siteUVElement) {
+              let trimmedText = siteUVElement.textContent.trim();
+              if (!trimmedText) return;
+              const siteUVValue = trimmedText ? parseInt(trimmedText, 10) : 0;
+              countUpInstances.push(new CountUp("busuanzi_value_site_uv", 0, siteUVValue, 0, 2, {
+                useEasing: true,
+                useGrouping: false,
+                separator: ",",
+                decimal: ".",
+                prefix: "",
+                suffix: "",
+              }));
+            }
+
+            const callback = (entries, observer) => {
+              entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                  countUpInstances.forEach(countUp => countUp.start());
+                  observer.disconnect(); // 停止观察元素，因为不再需要触发此回调
+                }
+              });
+            };
+
+            const options = {
+              root: null,
+              rootMargin: "0px",
+              threshold: 0
+            };
+            const observer = new IntersectionObserver(callback, options);
+            observer.observe(statisticElement);
+          }
+
+          setTimeout(() => {
+            statisticUP();
+          }, 1000);
+        }
+
     script(defer).
       function initAboutPage() {
-        fetch("https://v6-widget.51.la/v6/#{ck}/quote.js")
-          .then(res => res.text())
-          .then(data => {
-            let title = ["最近活跃", "今日人数", "今日访问", "昨日人数", "昨日访问", "本月访问", "总访问量"];
-            let num = data.match(/(<\/span><span>).*?(\/span><\/p>)/g);
-
-            num = num.map(el => {
-              let val = el.replace(/(<\/span><span>)/g, "");
-              let str = val.replace(/(<\/span><\/p>)/g, "");
-              return str;
-            });
-
-            let statisticEl = document.getElementById("statistic");
-
-            // 自定义不显示哪个或者显示哪个，如下为不显示 最近活跃访客 和 总访问量
-            let statistic = [];
-            for (let i = 0; i < num.length; i++) {
-              if (!statisticEl) return;
-              if (i == 0) continue;
-              statisticEl.innerHTML +=
-                "<div><span>" + title[i] + "</span><span id=" + title[i] + ">" + num[i] + "</span></div>";
-              queueMicrotask(() => {
-                statistic.push(
-                  new CountUp(title[i], 0, num[i], 0, 2, {
-                    useEasing: true,
-                    useGrouping: true,
-                    separator: ",",
-                    decimal: ".",
-                    prefix: "",
-                    suffix: "",
-                  })
-                );
-              });
-            }
-
-            let statisticElement = document.querySelector(".about-statistic.author-content-item");
-            function statisticUP() {
-              if (!statisticElement) return;
-
-              const callback = (entries, observer) => {
-                entries.forEach(entry => {
-                  if (entry.isIntersecting) {
-                    for (let i = 0; i < num.length; i++) {
-                      if (i == 0) continue;
-                      queueMicrotask(() => {
-                        statistic[i - 1].start();
-                      });
-                    }
-                    observer.disconnect(); // 停止观察元素，因为不再需要触发此回调
-                  }
-                });
-              };
-
-              const options = {
-                root: null,
-                rootMargin: "0px",
-                threshold: 0
-              };
-              const observer = new IntersectionObserver(callback, options);
-              observer.observe(statisticElement);
-            }
-
-            const selfInfoContentYear = new CountUp("selfInfo-content-year", 0, #{selfInfoContentYear}, 0, 2, {
-              useEasing: true,
-              useGrouping: false,
-              separator: ",",
-              decimal: ".",
-              prefix: "",
-              suffix: "",
-            });
-
-            let selfInfoContentYearElement = document.querySelector(".author-content-item.selfInfo.single");
-            function selfInfoContentYearUp() {
-              if (!selfInfoContentYearElement) return;
-
-              const callback = (entries, observer) => {
-                entries.forEach(entry => {
-                  if (entry.isIntersecting) {
-                    selfInfoContentYear.start();
-                    observer.disconnect(); // 停止观察元素，因为不再需要触发此回调
-                  }
-                });
-              };
-
-              const options = {
-                root: null,
-                rootMargin: "0px",
-                threshold: 0
-              };
-              const observer = new IntersectionObserver(callback, options);
-              observer.observe(selfInfoContentYearElement);
-            }
-
-            selfInfoContentYearUp();
-            statisticUP()
-          });
-
         var pursuitInterval = null;
         pursuitInterval = setInterval(function () {
           const show = document.querySelector("span[data-show]");
@@ -422,6 +630,13 @@ if site.data.about
             stagger: -0.1,
           });
         });
+        
+        if (typeof selfInfoContentYearUp === 'function') {
+          selfInfoContentYearUp();
+        }
+        if (typeof initStatistic=== 'function') {
+          initStatistic();
+        }
       }
       if (typeof gsap === "object") {
         initAboutPage()
