@@ -54,5 +54,6 @@ hexo.extend.helper.register('getArchiveLength', function () {
   })
 
   const name = month ? (day ? `${year}-${month}-${day}` : `${year}-${month}`) : year
-  return data.find(item => item.name === name).count
+  const foundItem = data.find(item => item.name === name);
+  return foundItem ? foundItem.count : 0; // 如果找到，返回 count，否则返回 0
 })
