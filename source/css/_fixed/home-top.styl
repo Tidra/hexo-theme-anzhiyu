@@ -1,0 +1,77 @@
+@media screen and (min-width: 1201px) {
+    #recent-posts>.recent-post-item .post_cover {
+        height: 180px;
+    }
+}
+@media screen and (max-width: 768px) {
+    #recent-posts > .recent-post-item .post_cover {
+        height: 150px;
+    }
+}
+@media screen and (max-width: 768px) {
+    #recent-posts > .recent-post-item >.recent-post-info {
+        min-height: auto;
+    }
+}
+#recent-posts > .recent-post-item >.recent-post-info {
+    flex: auto;
+    height: auto;
+    margin-bottom: 1rem;
+}
+#recent-posts > .recent-post-item .recent-post-info .recent-post-info-top {
+    margin-bottom: 1rem;
+}
+#recent-posts > .recent-post-item >.recent-post-info > .article-meta-wrap {
+    position: relative;
+    bottom: 0;
+}
+#content-inner #recent-posts > .recent-post-item > .recent-post-info > .content {
+    height: auto;
+    opacity: 1;
+    padding: 0 32px;
+    margin-top: 0.5rem;
+}
+
+if !hexo-config('home_top.banner.post_enable')
+    @media screen and (max-width: 1200px) {
+        div#bannerGroup {
+            height: 280px;
+            width: 100%;
+        }
+    }
+    @media screen and (max-width: 1200px) {
+        #random-banner {
+            display: flex;
+        }
+    }
+    @media screen and (max-width: 768px) {
+        .banners-title {
+            top: 2rem;
+            left: 2rem;
+        }
+        #random-banner #skills-tags-group-all {
+            transform: rotate(-30deg) scale(0.5);
+        }
+    }
+    @media screen and (max-width: 1200px) {
+        .categoryGroup {
+            flex-direction: row;
+            height: 24%;
+        }
+    }
+    @media screen and (max-width: 1200px) {
+        .categoryGroup .categoryItem:nth-child(3) {
+            display: block;
+        }
+    }
+    @media screen and (max-width: 1200px) {
+        .categoryItem {
+            height: 100%;
+            min-width: auto;
+        }
+    }
+    @media screen and (max-width: 1200px) {
+        .topGroup {
+            display: none;
+        }
+    }

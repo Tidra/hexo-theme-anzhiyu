@@ -13,6 +13,7 @@ if hexo-config('css_prefix')
 @import '_mode/*'
 @import '_third-party/*'
 @import '_extra/**/*.css'
+@import '_fixed/*'
 
 // search
 if hexo-config('algolia_search.enable')
@@ -22,3 +23,4 @@ if hexo-config('algolia_search.enable')
 if hexo-config('local_search') && hexo-config('local_search.enable')
   @import '_search/index'
   @import '_search/local-search'
+

@@ -1,0 +1,214 @@
+/* 电脑屏幕标签的横向滚动条导致不一致高度问题 */
+@media (any-pointer: fine) {
+    #catalog-list {
+        overflow-x: hidden;
+    }
+}
+@media (any-pointer: coarse) {
+    #catalog-list {
+        overflow-x: scroll;
+    }
+}
+
+@media screen and (max-width: 1200px) {
+    /* 小屏幕文章块标题文字显示重叠问题 */
+    #recent-posts > .recent-post-item >.recent-post-info.no-cover {
+        padding: 0px 20px;
+    }
+
+    /* 小屏幕的文章页图片显示问题 */
+    #page-header.post-bg #post-top-cover img#post-top-bg[src=''], #page-header.post-bg #post-top-cover img#post-top-bg:not([src]) {
+        opacity: 0 !important;
+    }
+}
+
+/* 头部横向滚动条后的文章块高度不一致问题 */
+.topGroup .recent-post-item:nth-child(4), .topGroup .recent-post-item:nth-child(5), .topGroup .recent-post-item:nth-child(6) {
+    margin-top: 0;
+}
+
+/* 正常模式下看不到文章标题问题 */
+#page-header.post-bg {
+    background-color: #252525c4;
+}
+
+/* site-card 黑暗模式不匹配 */
+.site-card-group > a .info {
+    background-color: var(--anzhiyu-maskbgdeep);
+}
+.site-card-group > a .info span {
+    background-color: var(--anzhiyu-maskbgdeep);
+}
+
+/* 代码扩展按钮挡住代码问题 */
+#article-container .code-expand-btn.expand-done ~ table, #article-container .code-expand-btn.expand-done ~ pre {
+    margin-bottom: 32px;
+}
+
+/* 保留评论预览 */
+#twikoo .tk-comments .el-button.tk-preview {
+    display: block;
+    border-color: var(--anzhiyu-fontcolor);
+    color: currentColor;
+    border-radius: 12px;
+    box-shadow: var(--anzhiyu-shadow-black);
+    transition: 0.3s;
+    width: 3.25rem;
+    position: absolute;
+    top: -42px;
+    right: 6.75rem;
+    margin-left: 0.5rem !important;
+    height: 33px;
+    background-color: rgb(144 147 153 / 41%);
+}
+@media screen and (max-width: 768px) {
+    #twikoo .tk-comments .el-button.tk-preview {
+        display: block;
+        height: 122px;
+        top: -126px;
+    }
+}
+#twikoo .tk-comments .el-button--primary {
+    top: -42px;
+    height: 33px;
+}
+#twikoo .tk-comments .tk-meta-input {
+    width: calc(100% - 10.5rem);
+}
+#twikoo .tk-preview-container {
+    margin-left: 0;
+}
+
+/* 
+    about页
+*/
+#about-page .author-content {
+    margin-top: 0;
+}
+
+#about-page .author-content-item {
+    flex: 1;
+    margin: 0.5rem;
+    height: auto;
+}
+
+#about-page .author-content-item.selfInfo {
+    height: auto;
+}
+
+#about-page .author-content-item-group.column {
+    margin: 0.5rem;
+    flex-wrap: wrap;
+    
+    .author-content-item {
+        width: 100%;
+        margin: 0.25rem 0;
+    }
+    
+    .author-content-item:first {
+        margin-top: 0;
+    }
+
+    .author-content-item:last {
+        margin-bottom: 0;
+    }
+}
+
+#about-page .hello-about {
+    margin: 0.5rem;
+}
+
+.author-content-item.comic-content .comic-item .comic-item-cover {
+    left: -25.5px;
+}
+
+#about-page .about-statistic {
+    min-height: auto;
+    min-width: 350px;
+}
+
+.author-content-item.buff, .author-content-item.game-yuanshen, .author-content-item.like-technology, .author-content-item.selfInfo, .author-content-item.like-music {
+    min-height: auto;
+}
+
+.author-content-item .card-content {
+    position: relative;
+    padding: 0;
+
+    .post-tips {
+        left: 0;
+        bottom: 0.5rem;
+    }
+
+    .banner-button-group {
+        right: 0;
+        bottom: 0.5rem;
+    }
+}
+
+.author-content-item.careers img {
+    z-index: 1;
+}
+
+.author-content-item.comic-content .comic-box {
+    z-index: 1;
+}
+
+.author-content-item.personalities .title2 {
+    padding-bottom: 3rem;
+}
+
+@media screen and (max-width: 768px) {
+    #about-page .myInfoAndSayHello {
+        flex-basis: 100% !important;
+    }
+    
+    #about-page .aboutsiteTips {
+        flex-basis: 100% !important;
+    }
+    
+    #about-page .author-content-item {
+        flex-basis: 100% !important;
+    }
+
+    #about-page .author-content-item-group.column {
+        flex-basis: 100% !important;
+    }
+}
+
+/*
+    普通page
+*/
+#page-header.not-home-page {
+    background-color: #252525c4;
+    overflow: hidden;
+}
+#page-header #page-site-info {
+    z-index: 3;
+}
+#page-header #site-title {
+    line-height: 1.5;
+    font-weight: 700;
+    font-size: 3.3rem;
+    -webkit-line-clamp: 2;
+    padding: 0;
+    overflow: hidden;
+}
+#page-top-cover {
+    height: 100%;
+    overflow: hidden;
+    transform: rotate(10deg) translateY(-10%) scale(var(--anzhiyu-header-cover-scale));
+    will-change: transform;
+    filter: blur(10px) brightness(60%);
+    transition: filter 0s;
+    margin: auto;
+    width: auto;
+}
+img#page-top-bg {
+    animation: slide-in 0.6s 0.3s backwards;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    min-width: 50vw;
+    min-height: 20rem;
+}
