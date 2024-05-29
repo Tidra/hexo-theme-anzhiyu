@@ -124,3 +124,19 @@ hexo.extend.filter.register("before_generate", () => {
     deleteNullValue(CDN.option)
   );
 });
+
+hexo.extend.filter.register('before_post_render', function(data) {
+  const themeConfig = hexo.theme.config;
+  const { CDN } = themeConfig;
+
+  data.content = data.content.replace(/(\.\.|\/source)\/(?:images|img)\/\S+\.(?:png|webp|jpg|gif|svg)/g, function(match, capture) {
+      // console.info(match, capture)
+      if (CDN.img_base_url || CDN.img_base_url != "local") {
+        return match.replace(capture, CDN.img_base_url)
+      } else {
+        return match.replace(capture, "")
+      }
+  });
+
+  return data;
+});

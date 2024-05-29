@@ -1,6 +1,6 @@
 /* 中控台 */
 #console {
-  display: flex;
+  display: none;
   position: fixed;
   width: 100vw;
   height: 100vh;
@@ -21,6 +21,7 @@
 
 #console.show,
 #console.reward-show {
+  display: flex;
   opacity: 1;
   pointer-events: all;
 }
