@@ -3,12 +3,12 @@ if theme.pjax.exclude
   each val in theme.pjax.exclude
     - pjaxExclude = pjaxExclude + `:not([href="${val}"])`
 
-- let pjaxSelectors = ['head > title','#config-diff', '#body-wrap','#rightside-config-hide','#rightside-config-show','.js-pjax']
+- let pjaxSelectors = ['head > title','meta[name="keywords"]','meta[name="description"]','meta[name="robots"]','#config-diff', '#body-wrap','#rightside-config-hide','#rightside-config-show','.js-pjax']
 
 - let choose = theme.comments.use
 if choose
   if theme.Open_Graph_meta && (choose.includes('Twikoo'))
-    - pjaxSelectors.unshift('meta[property="og:image"]', 'meta[property="og:title"]', 'meta[property="og:url"]', 'meta[property="og:type"]', 'meta[property="og:site_name"]', 'meta[property="og:description"]')
+    - pjaxSelectors.unshift('meta[property="twitter:image"]', 'meta[property="og:image"]', 'meta[property="og:title"]', 'meta[property="og:url"]', 'meta[property="og:type"]', 'meta[property="og:description"]', 'meta[property="article:tag"]')
 
 script(src=url_for(theme.asset.pjax))
 script.

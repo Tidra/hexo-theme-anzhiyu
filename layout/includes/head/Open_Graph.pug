@@ -1,16 +1,21 @@
 if theme.Open_Graph_meta
   - let contentType = is_post() ? 'article' : 'website'
   - let metaImage = (page.cover || theme.avatar.img) ? full_url_for(page.cover || theme.avatar.img) : ''
+  - var language = Array.isArray(config.language) ? (config.language).join(',') : page.keywords
+  - var pageKeywords
+  - if (page.keywords) pageKeywords = Array.isArray(page.keywords) ? (page.keywords).join(',') : page.keywords
+  - else if (page.tags && page.tags.length) pageKeywords = page.tags.data.map(function(tag) {return tag.name;}).join(',')
+  - else pageKeywords = Array.isArray(config.keywords) ? (config.keywords).join(','): config.keywords
 
   meta(property="og:type", content=contentType)
   meta(property="og:title", content=pageTitle)
   meta(property="og:url", content=theme.post_copyright.decode ? decodeURI(url) : url)
   meta(property="og:site_name", content=config.title)
   meta(property="og:description", content=page_description())
-  meta(property="og:locale", content=config.language)
+  meta(property="og:locale", content=language)
   meta(property="og:image", content=metaImage)
   meta(property="article:author" content=config.author)
-  meta(property="article:tag" content=config.keywords)
+  meta(property="article:tag" content=pageKeywords)
   meta(name="twitter:card", content="summary")
   meta(name="twitter:image", content=metaImage)
 

@@ -2,9 +2,10 @@
 - page.aside = is_archive() ? theme.aside.display.archive: is_category() ? theme.aside.display.category : is_tag() ? theme.aside.display.tag : page.aside
 - var hideAside = !theme.aside.enable || page.aside === false ? 'hide-aside' : ''
 - var pageType = is_post() ? 'post' : 'page'
+- var language = Array.isArray(config.language) ? (config.language).join(',') : page.keywords
 
 doctype html
-html(lang=config.language data-theme=theme.display_mode class=htmlClassHideAside)
+html(lang=language data-theme=theme.display_mode class=htmlClassHideAside)
   head
     include ./head.pug
   body(data-type="anzhiyu")

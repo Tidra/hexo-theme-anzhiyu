@@ -1302,7 +1302,7 @@ CDN:
     # pjax:
     # blueimp_md5:
     # valine:
-    twikoo: https://cdn.staticfile.org/twikoo/1.6.32/twikoo.all.min.js
+    # twikoo: 
     # waline_js:
     # waline_css:
     # sharejs:

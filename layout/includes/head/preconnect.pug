@@ -1,5 +1,5 @@
 -
-  const { internal_provider, third_party_provider, custom_format } = theme.CDN
+  const { internal_provider, third_party_provider, custom_format, img_base_url } = theme.CDN
   const providers = {
     'jsdelivr': '//cdn.jsdelivr.net',
     'cdnjs': '//cdnjs.cloudflare.com',
@@ -10,7 +10,11 @@
     'anheyu': '//cdn.anheyu.com',
     'custom': custom_format && custom_format.match(/^((https?:)?(\/\/[^/]+)|([^/]+))(\/|$)/)[1]
   }
+  const img_provider = img_base_url && img_base_url.match(/^((https?:)?(\/\/[^/]+)|([^/]+))(\/|$)/)[1]
 -
+
+if img_provider
+  link(rel="dns-prefetch" href=img_provider)
 
 if internal_provider === third_party_provider && internal_provider !== 'local'
   link(rel="preconnect" href=providers[internal_provider])
