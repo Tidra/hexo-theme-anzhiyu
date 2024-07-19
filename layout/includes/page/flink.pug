@@ -22,7 +22,7 @@
           - }
           each y in [1,2]
             each i, index in site.data.link.slice(0, 15)
-              - const link_list = i.link_list.slice()
+              - const link_list = i.link_list ? i.link_list.slice() : []
               - const hundredSuffix = i.hundredSuffix ? i.hundredSuffix : ""
               - const evenNum = link_list.filter((x, index) => index % 2 === 0);
               - const oddNum = link_list.filter((x, index) => index % 2 === 1);
@@ -51,8 +51,10 @@
   .flink
     if site.data.link
       each i in site.data.link
-        if i.class_name
+        if i.class_name && i.link_list
           h2!= i.class_name + "(" + i.link_list.length + ")"
+        else if i.class_name
+          h2!= i.class_name
         if i.class_desc
           .flink-desc!=i.class_desc
         if i.flink_style === 'anzhiyu'
@@ -130,4 +132,34 @@
                   else
                     img.cf-friends-avatar.no-lightbox(src=url_for(item.avatar) cf-src=url_for(item.avatar) onerror=`this.onerror=null;this.src='` + url_for(theme.error_img.flink) + `'` alt='cover' )
                   span.flink-sitename.cf-friends-name= item.name
-    != page.content
+        else if i.flink_style === 'content'
+          != page.content
+        else if i.flink_style === 'checkbox'
+          #friendlink_checkboxs
+            each item in i.p_list
+              label.checkbox
+                input(type="checkbox" onclick="checkAllChecked()") 
+                p!= item
+          script(defer).
+            function checkAllChecked() {
+              var checkboxes = document.querySelectorAll('#friendlink_checkboxs input[type="checkbox"]');
+              var allChecked = Array.from(checkboxes).every(function(checkbox) {
+                  return checkbox.checked;
+              });
+              var twikooSubmit = document.querySelector('#twikoo .tk-submit');
+              if (allChecked) {
+                  twikooSubmit.style.opacity = "1"; // 显示提交按钮
+                  twikooSubmit.style.height = "auto";
+                  anzhiyu.addFriendLink();
+              } else {
+                  twikooSubmit.style.opacity = "0";
+                  twikooSubmit.style.height = "0";
+              }
+            }
+            if (typeof twikoo === "object") {
+              checkAllChecked();
+            } else {
+              getScript("!{url_for(theme.asset.twikoo)}").then(checkAllChecked);
+            }
+    else
+      != page.content
