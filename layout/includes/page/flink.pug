@@ -156,10 +156,8 @@
                   twikooSubmit.style.height = "0";
               }
             }
-            if (typeof twikoo === "object") {
+            setTimeout(() => {
               checkAllChecked();
-            } else {
-              getScript("!{url_for(theme.asset.twikoo)}").then(checkAllChecked);
-            }
+            }, 1000);
     else
       != page.content
